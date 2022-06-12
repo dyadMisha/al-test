@@ -1,0 +1,8 @@
+---
+- name: configure DHCP client
+  hosts: dhcp-client
+  become: true
+
+  roles:
+    - role: dhcp-client
+

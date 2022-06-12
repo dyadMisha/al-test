@@ -1,0 +1,59 @@
+---
+# tasks file for dhcp_client_role
+
+- name: enable IPv6
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.disable_ipv6
+    value: '0'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: clean initial network config
+  copy:
+    owner: root
+    group: root
+    mode: 0644
+    dest: /etc/network/interfaces
+    content: |
+      source /etc/network/interfaces.d/*
+  notify: restart network 
+
+- name: recreate loopback interface
+  copy:
+    owner: root
+    group: root
+    mode: 0644
+    dest: /etc/network/interfaces.d/lo.conf
+    content: |
+      auto lo
+      iface lo inet loopback 
+  notify: restart network 
+
+- name: recreate vagrant management interface
+  copy:
+    owner: root
+    group: root
+    mode: 0644
+    dest: /etc/network/interfaces.d/eth0.conf
+    content: |
+      allow-hotplug eth0
+      auto eth0
+      iface eth0 inet dhcp
+      dns-nameserver 4.2.2.1
+      dns-nameserver 4.2.2.2
+      pre-up sleep 2
+  notify: restart network 
+
+- name: create desired dhcp interface 
+  copy:
+    owner: root
+    group: root
+    mode: 0644
+    dest: /etc/network/interfaces.d/eth1.conf
+    content: |
+      allow-hotplug eth1
+      auto eth1
+      iface eth1 inet dhcp
+      iface eth1 inet6 dhcp
+  notify: restart network 

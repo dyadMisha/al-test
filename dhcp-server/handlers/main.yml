@@ -1,0 +1,12 @@
+---
+# handlers file for dhcp_server_role
+
+- name: restart network
+  service:
+    name: networking
+    state: restarted
+
+- name: restart dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted

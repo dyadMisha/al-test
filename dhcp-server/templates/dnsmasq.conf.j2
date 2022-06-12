@@ -1,0 +1,20 @@
+#interface=eth1
+
+# disable DNS server
+port=0
+
+# enable IPv4 DHCP server
+dhcp-range={{ dhcp4_range_start }},{{ dhcp4_range_end }},{{ dhcp4_netmask }},12h
+
+# enable IPv6 DHCP server
+enable-ra
+dhcp-range={{ dhcp6_range_start }},{{ dhcp6_range_end }},{{ dhcp6_netmask }},12h
+
+# lease file path
+dhcp-leasefile=/var/log/dnsmasq.leases
+
+# logging.
+log-facility=/var/log/dnsmasq.log
+log-async
+log-queries
+log-dhcp
